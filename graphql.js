@@ -335,7 +335,7 @@ module.exports = function(RED) {
     function callGraphQLServer(query, variables = {}) {
       let headers = {}
       if (node.graphqlConfig.authorization) {
-        headers["Authorization"] = node.graphqlConfig.authorization
+        headers["Authorization"] = "Bearer " + node.graphqlConfig.authorization // fix for Gitlab
       }
       //RED.log.debug('callGraphQLServer, node: ' + safeJSONStringify(node));
       //RED.log.debug('callGraphQLServer, node.graphqlConfig.endpoint: ' + node.graphqlConfig.endpoint);
@@ -362,7 +362,7 @@ module.exports = function(RED) {
                 shape: "dot",
                 text: RED._("graphql.status.success")
               });
-              node.msg.payload = response.data.data;
+              node.msg.payload.graphql = response.data.data; // make sure original msg is not overwritten
               node.send(node.msg);
               break;
             default:
